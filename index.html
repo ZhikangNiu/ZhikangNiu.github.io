@@ -9,6 +9,24 @@
 <script src="jquery.min.js"></script>
 <link rel="shortcut icon" href="./images/book.png">
 <title>Zhikang Niu (牛志康)</title>
+
+<!-- ============ Add styles for Education & Intern alignment ============ -->
+<style type="text/css">
+  /* 两列对齐：左列日期，右列详情 */
+  .edu-list { list-style: none; padding: 0; margin: 0; }
+  .edu-list li {
+    display: grid;
+    grid-template-columns: 170px auto; /* 调整左列宽度即可微调对齐 */
+    column-gap: 12px;
+    margin-bottom: 8px;
+    align-items: start;
+  }
+  .edu-list .date { font-weight: bold; white-space: nowrap; }
+  .edu-list .detail { line-height: 1.5; }
+  .edu-list a { word-break: break-word; }
+</style>
+<!-- ==================================================================== -->
+
 </head>
  
  
@@ -29,12 +47,12 @@ Work at Shanghai Innovation Institute.
 <br />
 <br />
 <class="staffshortcut">
- <A HREF="#Interest">Research Interests</A> | 
- <A HREF="#Education and intern">Education and Intern</A> | 
- <A HREF="#Publications">Publications</A> | 
- <A HREF="#Projects">Projects</A> | 
- <A HREF="#Honors and awards">Honors and Awards</A> |
- <A HREF="#Activities">Activities</A> | 
+ <a href="#Interest">Research Interests</a> | 
+ <a href="#Education and intern">Education and Intern</a> | 
+ <a href="#Publications">Publications</a> | 
+ <a href="#Projects">Projects</a> | 
+ <a href="#Honors and awards">Honors and Awards</a> |
+ <a href="#Activities">Activities</a> | 
  <!-- <A HREF="#Invited talks and lives">Invited Talks and Lives</A> -->
 <br />
 <br />
@@ -51,7 +69,7 @@ if you have any questions, please feel free to contact me with <a href="mailto:z
 
 
  
-<A NAME="Interest"><h2>Research Interest</h2></A>
+<a name="Interest"><h2>Research Interest</h2></a>
 I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Large Language Model, Machine learning, and Deep learning supervised by <a href="https://chenxie95.github.io/" target="_blank">Prof. Xie Chen</a>, I will try my best in the next five exciting years! 💪. Currently, I focus on the following research topics:
 <ul>
 <li>Audio Tokenizer (Discrete and Continuous)</li>
@@ -60,26 +78,40 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 </ul>
 
 
- 
-<A NAME="Education and intern"><h2>Education and Intern</h2></A>
-<ul>
-<li>2025.01-2025.06 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Research Intern, <a href="https://www.shlab.org.cn/" target="_blank">Shanghai Artificial Intelligence Laboratory</a>.</li>
-<li>2023.08-2024.09 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Research Intern, Natural Language Computing Group (NLC), <a href="https://www.msra.cn/" target="_blank">Microsoft Research Asia (MSRA)</a>. Led by <a href="https://thegenerality.com/",target="_blank">Furu Wei</a>, supervised by <a href="https://www.microsoft.com/en-us/research/people/shujliu/" target="_blank">Shujie Liu</a> and <a href="https://long-zhou.github.io/" target="_blank">Long Zhou</a>. Focus on Audio Codec and Speech Synthesis.</li> 
-<li>2020.09-2024.06 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bachelor Degree of Engineering, <a href="https://sai.xidian.edu.cn/" target="_blank">School of Artificial Intelligence</a>, <a href="https://www.xidian.edu.cn/" target="_blank">Xidian University</a>.</li>
+<!-- ===================== Education and Intern (aligned) ===================== -->
+<a name="Education and intern"><h2>Education and Intern</h2></a>
+<ul class="edu-list">
+  <li>
+    <span class="date">2025.07–current</span>
+    <span class="detail">Research Intern, <a href="https://www.minimaxi.com/" target="_blank">Minimax Speech Team</a>.</span>
+  </li>
+  <li>
+    <span class="date">2025.01–2025.06</span>
+    <span class="detail">Research Intern, <a href="https://www.shlab.org.cn/" target="_blank">Shanghai Artificial Intelligence Laboratory</a>.</span>
+  </li>
+  <li>
+    <span class="date">2023.08–2024.09</span>
+    <span class="detail">Research Intern, Natural Language Computing Group (NLC), <a href="https://www.msra.cn/" target="_blank">Microsoft Research Asia (MSRA)</a>. Led by <a href="https://thegenerality.com/" target="_blank">Furu Wei</a>, supervised by <a href="https://www.microsoft.com/en-us/research/people/shujliu/" target="_blank">Shujie Liu</a> and <a href="https://long-zhou.github.io/" target="_blank">Long Zhou</a>. Focus on Audio Codec and Speech Synthesis.</span>
+  </li>
+  <li>
+    <span class="date">2020.09–2024.06</span>
+    <span class="detail">Bachelor Degree of Engineering, <a href="https://sai.xidian.edu.cn/" target="_blank">School of Artificial Intelligence</a>, <a href="https://www.xidian.edu.cn/" target="_blank">Xidian University</a>.</span>
+  </li>
 </ul>
+<!-- ======================================================================== -->
 
  
-<A NAME="Publications"><h2>Publications</h2></A>
-<A NAME="tts/omni"><h3>Speech Synthesis/Omni System</h3></A>
+<a name="Publications"><h2>Publications</h2></a>
+<a name="tts/omni"><h3>Speech Synthesis/Omni System</h3></a>
 <font size="3"> 
 <ul>
 <!-- <p style="text-indent: -2.5rem;margin-left: 0rem;"> -->
-<li> <b>Zhikang Niu</b>, Sanyuan Chen, Long Zhou, Ziyang Ma, Xie Chen, Shujie Liu.<br>
-<b>NDVQ: Robust Neural Audio Codec with Normal Distribution-Based Vector Quantization.</b><br>
+<li> <b>Zhikang Niu</b>, Sanyuan Chen, Long Zhou, Ziyang Ma, Xie Chen, Shujie Liu.<br />
+<b>NDVQ: Robust Neural Audio Codec with Normal Distribution-Based Vector Quantization.</b><br />
 <i><b>SLT 2024</b></i>,
-[<a href= "https://arxiv.org/abs/2409.12717" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2409.12717.pdf" target="_blank">PDF</a>]
-[<a href= "https://github.com/ZhikangNiu/NDVQ" target="_blank">Code</a>]
+[<a href="https://arxiv.org/abs/2409.12717" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2409.12717.pdf" target="_blank">PDF</a>]
+[<a href="https://github.com/ZhikangNiu/NDVQ" target="_blank">Code</a>]
 [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:iZGY-fGY7V0J:scholar.google.com/&output=citation&scisdr=ClE9Ykj8EOKBzLPFleU:AFWwaeYAAAAAZwfDjeWrAPZjPpJAhx24s6n-28I&scisig=AFWwaeYAAAAAZwfDjRXdVka9BJmZmd1l7f2Pq5s&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>]
 </p>
 </ul>
@@ -88,28 +120,28 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 <font size="3"> 
 <ul>
 <!-- <p style="text-indent: -2.5rem;margin-left: 0rem;"> -->
-<li> Jeongsoo Choi<sup>*</sup>, <b>Zhikang Niu<sup>*</sup></b>, Ji-Hoon Kim, Chunhui Wang, Joon Son Chung, Xie Chen.<br>
-<b>Accelerating Diffusion-based Text-to-Speech Model Training with Dual Modality Alignment.</b><br>
-<i><b>InterSpeech 2025</b></i>,
-[<a href= "https://arxiv.org/abs/2505.19595v1" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2505.19595v1.pdf" target="_blank">PDF</a>]
-[<a href= "https://github.com/ZhikangNiu/A-DMA" target="_blank">Code</a>]
-<!-- [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:iZGY-fGY7V0J:scholar.google.com/&output=citation&scisdr=ClE9Ykj8EOKBzLPFleU:AFWwaeYAAAAAZwfDjeWrAPZjPpJAhx24s6n-28I&scisig=AFWwaeYAAAAAZwfDjRXdVka9BJmZmd1l7f2Pq5s&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>] -->
+<li> Jeongsoo Choi<sup>*</sup>, <b>Zhikang Niu<sup>*</sup></b>, Ji-Hoon Kim, Chunhui Wang, Joon Son Chung, Xie Chen.<br />
+<b>Accelerating Diffusion-based Text-to-Speech Model Training with Dual Modality Alignment.</b><br />
+<i><b>InterSpeech 2025 Oral</b></i>,
+[<a href="https://arxiv.org/abs/2505.19595" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2505.19595" target="_blank">PDF</a>]
+[<a href="https://github.com/ZhikangNiu/A-DMA" target="_blank">Code</a>]
+[<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:exsTSNIez1gJ:scholar.google.com/&output=citation&scisdr=CgLF-yroEJq-_GfWPvo:AAZF9b8AAAAAaKXQJvozfAe9NZnbQnkuYcPdnfU&scisig=AAZF9b8AAAAAaKXQJhKBS4kaD48GEBTGEONKZoE&scisf=4&ct=citation&cd=-1&hl=en">BibTeX</a>]
 </p>
 </ul>
 </font>
 
 <font size="3"> 
 <ul>
-<li> Yushen Chen, <b>Zhikang Niu</b>, Ziyang Ma, Keqi Deng, Chunhui Wang, Jian Zhao, Kai Yu, Xie Chen.<br>
-<b>F5-TTS: A Fairytaler that Fakes Fluent and Faithful Speech with Flow Matching.</b><br>
+<li> Yushen Chen, <b>Zhikang Niu</b>, Ziyang Ma, Keqi Deng, Chunhui Wang, Jian Zhao, Kai Yu, Xie Chen.<br />
+<b>F5-TTS: A Fairytaler that Fakes Fluent and Faithful Speech with Flow Matching.</b><br />
 <i><b>ACL 2025 Main</b></i>,
-[<a href= "https://arxiv.org/abs/2410.06885" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2410.06885" target="_blank">PDF</a>]
-[<a href= "https://github.com/SWivid/F5-TTS" target="_blank">Code</a>]
+[<a href="https://arxiv.org/abs/2410.06885" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2410.06885" target="_blank">PDF</a>]
+[<a href="https://github.com/SWivid/F5-TTS" target="_blank">Code</a>]
 [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:mabuw4cUBgYJ:scholar.google.com/&output=citation&scisdr=ClEsUoQnEI2Pm9TqM8I:AFWwaeYAAAAAZ2zsK8LxbCxd3NGHmZYe6ohDCeA&scisig=AFWwaeYAAAAAZ2zsK5y3MUlvYcPKpHnyK-5x0Oo&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>]
-[<a href="https://event.baai.ac.cn/live/852" target="_blank">Talk</a>]<br>
-<a href="https://github.com/SWivid/F5-TTS" target="_blank">F5-TTS</a> has collected <b><font color="#FF0000">12,000+ stars</font></b> on GitHub.<br>
+[<a href="https://event.baai.ac.cn/live/852" target="_blank">Talk</a>]<br />
+<a href="https://github.com/SWivid/F5-TTS" target="_blank">F5-TTS</a> has collected <b><font color="#FF0000">13,000+ stars</font></b> on GitHub.<br />
 </p>
 </ul>
 </font>
@@ -117,12 +149,12 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 <font size="3"> 
 <ul>
 <!-- <p style="text-indent: -2.5rem;margin-left: 0rem;"> -->
-<li> Qixi zheng, Yushen Chen, <b>Zhikang Niu</b>, Ziyang Ma, Xiaofei Wang, Kai Yu, Xie Chen.<br>
-<b>Accelerating Flow-Matching-Based Text-to-Speech via Empirically Pruned Step Sampling.</b><br>
+<li> Qixi zheng, Yushen Chen, <b>Zhikang Niu</b>, Ziyang Ma, Xiaofei Wang, Kai Yu, Xie Chen.<br />
+<b>Accelerating Flow-Matching-Based Text-to-Speech via Empirically Pruned Step Sampling.</b><br />
 <i><b>InterSpeech 2025</b></i>,
-[<a href= "https://arxiv.org/abs/2505.19931v1" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2505.19931v1.pdf" target="_blank">PDF</a>]
-<!-- [<a href= "https://github.com/ZhikangNiu/NDVQ" target="_blank">Code</a>] -->
+[<a href="https://arxiv.org/abs/2505.19931v1" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2505.19931v1.pdf" target="_blank">PDF</a>]
+[<a href= "https://github.com/SWivid/F5-TTS" target="_blank">Code</a>]
 <!-- [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:iZGY-fGY7V0J:scholar.google.com/&output=citation&scisdr=ClE9Ykj8EOKBzLPFleU:AFWwaeYAAAAAZwfDjeWrAPZjPpJAhx24s6n-28I&scisig=AFWwaeYAAAAAZwfDjRXdVka9BJmZmd1l7f2Pq5s&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>] -->
 </p>
 </ul>
@@ -130,11 +162,11 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 
 <font size="3"> 
 <ul>
-<li> Yuzhe Liang, Wenzhe Liu, Chunyu Qiang, <b>Zhikang Niu</b>, Yushen Chen, Ziyang Ma, Wenxi Chen, Nan Li, Chen Zhang, Xie Chen.<br>
+<li> Yuzhe Liang, Wenzhe Liu, Chunyu Qiang, <b>Zhikang Niu</b>, Yushen Chen, Ziyang Ma, Wenxi Chen, Nan Li, Chen Zhang, Xie Chen.<br />
 <b>Towards Flow-Matching-based TTS without Classifier-Free Guidance.</b>
 <!-- <a href="https://github.com/SWivid/F5-TTS" target="_blank">F5-TTS</a> has collected <b><font color="#FF0000">11,000+ stars</font></b> on GitHub.<br> -->
-[<a href= "https://arxiv.org/abs/2504.20334" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2504.20334" target="_blank">PDF</a>]
+[<a href="https://arxiv.org/abs/2504.20334" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2504.20334" target="_blank">PDF</a>]
 <!-- [<a href= "https://github.com/SWivid/F5-TTS" target="_blank">Code</a>] -->
 <!-- [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:mabuw4cUBgYJ:scholar.google.com/&output=citation&scisdr=ClEsUoQnEI2Pm9TqM8I:AFWwaeYAAAAAZ2zsK8LxbCxd3NGHmZYe6ohDCeA&scisig=AFWwaeYAAAAAZ2zsK5y3MUlvYcPKpHnyK-5x0Oo&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>] -->
 <!-- [<a href="https://event.baai.ac.cn/live/852" target="_blank">Talk</a>] -->
@@ -144,12 +176,12 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 
 <font size="3"> 
 <ul>
-<li>Wenxi Chen, Ziyang Ma, Ruiqi Yan, Yuzhe Liang, Xiquan Li, Ruiyang Xu, <b>Zhikang Niu</b>, et al.<br>
-<b>SLAM-Omni: Timbre-Controllable Voice Interaction System with Single-Stage Training.</b><br>
+<li>Wenxi Chen, Ziyang Ma, Ruiqi Yan, Yuzhe Liang, Xiquan Li, Ruiyang Xu, <b>Zhikang Niu</b>, et al.<br />
+<b>SLAM-Omni: Timbre-Controllable Voice Interaction System with Single-Stage Training.</b><br />
 <i><b>ACL 2025 Findings</b></i>,
-[<a href= "https://arxiv.org/abs/2412.15649" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2412.15649" target="_blank">PDF</a>]
-[<a href= "https://github.com/X-LANCE/SLAM-LLM/tree/main/examples/s2s" target="_blank">Code</a>]
+[<a href="https://arxiv.org/abs/2412.15649" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2412.15649" target="_blank">PDF</a>]
+[<a href="https://github.com/X-LANCE/SLAM-LLM/tree/main/examples/s2s" target="_blank">Code</a>]
 [<a href="http://scholar.googleusercontent.com/scholar.bib?q=info:0ba6dZka5owJ:scholar.google.com/&output=citation&scisdr=ClEsUoQnEI2PlKmz4X0:AFWwaeYAAAAAaBG1-X04qYsd1dBVPEvMkKcpPb8&scisig=AFWwaeYAAAAAaBG1-R91WNJpVLpV4tYnSKLeoeA&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>]
 </p>
 </ul>
@@ -158,11 +190,11 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 <font size="3"> 
 <ul>
 <!-- <p style="text-indent: -2.5rem;margin-left: 0rem;"> -->
-<li> Chenpeng Du, Yiwei Guo, Hankun Wang, Yifan Yang, <b>Zhikang Niu</b>, Shuai Wang, Hui Zhang, Xie Chen.<br>
-<b>VALL-T: Decoder-Only Generative Transducer for Robust and Decoding-Controllable Text-to-Speech.</b><br>
+<li> Chenpeng Du, Yiwei Guo, Hankun Wang, Yifan Yang, <b>Zhikang Niu</b>, Shuai Wang, Hui Zhang, Xie Chen.<br />
+<b>VALL-T: Decoder-Only Generative Transducer for Robust and Decoding-Controllable Text-to-Speech.</b><br />
 <i><b>ICASSP 2025</b></i>,
-[<a href= "https://arxiv.org/abs/2401.14321" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2401.14321.pdf" target="_blank">PDF</a>]
+[<a href="https://arxiv.org/abs/2401.14321" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2401.14321.pdf" target="_blank">PDF</a>]
 [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:423LVFzDAh0J:scholar.google.com/&output=citation&scisdr=ClEXtQ9QEMjm1kg_lBQ:AFWwaeYAAAAAZeE5jBRZItSkmZL-6cy9PIFICTI&scisig=AFWwaeYAAAAAZeE5jKmKyS0hsW4Yk5zbPIk00-M&scisf=4&ct=citation&cd=-1&hl=en">BibTeX</a>]
 </p>
 </ul>
@@ -171,27 +203,27 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 <font size="3"> 
 <ul>
 <!-- <p style="text-indent: -2.5rem;margin-left: 0rem;"> -->
-<li> Guanrou Yang, Ziyang Ma, Zhisheng Zheng, Yakun Song, <b>Zhikang Niu</b>, Xie Chen.<br>
-<b>Fast-HuBERT: An Efficient Training Framework for Self-Supervised Speech Representation Learning.</b><br>
+<li> Guanrou Yang, Ziyang Ma, Zhisheng Zheng, Yakun Song, <b>Zhikang Niu</b>, Xie Chen.<br />
+<b>Fast-HuBERT: An Efficient Training Framework for Self-Supervised Speech Representation Learning.</b><br />
 <i><b>ASRU 2023</b></i>,
-[<a href= "https://arxiv.org/abs/2309.13860" target="_blank">Link</a>]
-[<a href= "https://browse.arxiv.org/pdf/2309.13860.pdf" target="_blank">PDF</a>]
-[<a href= "https://github.com/yanghaha0908/FastHuBERT" target="_blank">Code</a>]
+[<a href="https://arxiv.org/abs/2309.13860" target="_blank">Link</a>]
+[<a href="https://browse.arxiv.org/pdf/2309.13860.pdf" target="_blank">PDF</a>]
+[<a href="https://github.com/yanghaha0908/FastHuBERT" target="_blank">Code</a>]
 [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:5igU4Z9Xe2sJ:scholar.google.com/&output=citation&scisdr=ClEoLDBxEOzd6Ydut8w:AFWwaeYAAAAAZSFor8xL1SdSCeYwkCTVnwkGQSo&scisig=AFWwaeYAAAAAZSFor1SCJ3LMXRhW0icv0dF0A4c&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>]
 </p>
 </ul>
 </font>
 
-<A NAME="bench"><h3>Benchmark</h3></A>
+<a name="bench"><h3>Benchmark</h3></a>
 
 <font size="3"> 
 <ul>
-<li>MMAR Team.<br>
-<b>MMAR: A Challenging Benchmark for Deep Reasoning in Speech, Audio, Music, and Their Mix.</b><br>
+<li>MMAR Team.<br />
+<b>MMAR: A Challenging Benchmark for Deep Reasoning in Speech, Audio, Music, and Their Mix.</b><br />
 <!-- <i>IEEE International Conference on Acoustics, Speech, and Signal Processing(<b>ICASSP 2025</b>)</i>,  -->
-[<a href= "https://arxiv.org/abs/2505.13032" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2505.13032" target="_blank">PDF</a>]
-[<a href= "https://github.com/ddlBoJack/MMAR" target="_blank">Code</a>]
+[<a href="https://arxiv.org/abs/2505.13032" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2505.13032" target="_blank">PDF</a>]
+[<a href="https://github.com/ddlBoJack/MMAR" target="_blank">Code</a>]
 <!-- [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:hLAen0w5rmUJ:scholar.google.com/&output=citation&scisdr=ClEsUoQ4EI2Pm309DEs:AFWwaeYAAAAAZ8U7FEtQ0dLvIpQUsNd-L5v3mPY&scisig=AFWwaeYAAAAAZ8U7FLbJloYytyFZSAqT0Xr7j8Q&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>] -->
 </p>
 </ul>
@@ -199,29 +231,29 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 
 <font size="3"> 
 <ul>
-<li>Ruiqi Yan, Xiquan Li, Wenxi Chen, <b>Zhikang Niu</b>, Chen Yang, Ziyang Ma, Kai Yu, Xie Chen.<br>
-<b>URO-Bench: A Comprehensive Benchmark for End-to-End Spoken Dialogue Models.</b><br>
+<li>Ruiqi Yan, Xiquan Li, Wenxi Chen, <b>Zhikang Niu</b>, Chen Yang, Ziyang Ma, Kai Yu, Xie Chen.<br />
+<b>URO-Bench: A Comprehensive Benchmark for End-to-End Spoken Dialogue Models.</b><br />
 <!-- <i>IEEE International Conference on Acoustics, Speech, and Signal Processing(<b>ICASSP 2025</b>)</i>,  -->
-[<a href= "https://arxiv.org/abs/2502.17810" target="_blank">Link</a>]
-[<a href= "https://arxiv.org/pdf/2502.17810" target="_blank">PDF</a>]
-[<a href= "https://github.com/Ruiqi-Yan/URO-Bench" target="_blank">Code</a>]
+[<a href="https://arxiv.org/abs/2502.17810" target="_blank">Link</a>]
+[<a href="https://arxiv.org/pdf/2502.17810" target="_blank">PDF</a>]
+[<a href="https://github.com/Ruiqi-Yan/URO-Bench" target="_blank">Code</a>]
 [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:hLAen0w5rmUJ:scholar.google.com/&output=citation&scisdr=ClEsUoQ4EI2Pm309DEs:AFWwaeYAAAAAZ8U7FEtQ0dLvIpQUsNd-L5v3mPY&scisig=AFWwaeYAAAAAZ8U7FLbJloYytyFZSAqT0Xr7j8Q&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>]
 </p>
 </ul>
 </font>
 
-<A NAME="Projects"><h2>Projects</h2></A>
+<a name="Projects"><h2>Projects</h2></a>
 <b>Open-Source Projects</b>:
 <font size="3"> 
 <ul>
 
-<li><a href= "https://github.com/datawhalechina/thorough-pytorch" target="_blank"><b>thorough-pytorch</b>:</a> A Chinese PyTorch tutorial and it has already collected <b><font color="#FF0000">2,300 more stars and 333 forks</font></b> on GitHub.
+<li><a href="https://github.com/datawhalechina/thorough-pytorch" target="_blank"><b>thorough-pytorch</b>:</a> A Chinese PyTorch tutorial and it has already collected <b><font color="#FF0000">2,300 more stars and 333 forks</font></b> on GitHub.
 </li>
 
- <li><a href= "https://github.com/CS-BAOYAN/CSBasicKnowledge" target="_blank"><b>CSBasicKnowledge</b>:</a> This repo will record some knowledge about computer science, artificial intelligence and EE. It has already collected <b><font color="#FF0000">560 more stars</font></b> on GitHub.
+ <li><a href="https://github.com/CS-BAOYAN/CSBasicKnowledge" target="_blank"><b>CSBasicKnowledge</b>:</a> This repo will record some knowledge about computer science, artificial intelligence and EE. It has already collected <b><font color="#FF0000">560 more stars</font></b> on GitHub.
 </li>
 
-<li>More open-source contents can be found on my <a href= "https://github.com/ZhikangNiu" target="_blank">GitHub</a>.
+<li>More open-source contents can be found on my <a href="https://github.com/ZhikangNiu" target="_blank">GitHub</a>.
 </li>
 </ul>
 </font>
@@ -231,12 +263,12 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 <font size="3"> 
 <ul>
 
-<li><a href= "https://github.com/ZhikangNiu/encodec-pytorch" target="_blank"><b>encodec-pytorch</b>:</a> An unofficial PyTorch implementation of the <a href= "https://arxiv.org/pdf/2210.13438.pdf" target="_blank">High Fidelity Neural Audio Compression</a> and it has already collected <b><font color="#FF0000">155 stars</font></b> on GitHub. [<a href= "https://huggingface.co/zkniu/encodec-pytorch/tree/main" target="_blank">checkpoint</a>] 
+<li><a href="https://github.com/ZhikangNiu/encodec-pytorch" target="_blank"><b>encodec-pytorch</b>:</a> An unofficial PyTorch implementation of the <a href="https://arxiv.org/pdf/2210.13438.pdf" target="_blank">High Fidelity Neural Audio Compression</a> and it has already collected <b><font color="#FF0000">163 stars</font></b> on GitHub. [<a href="https://huggingface.co/zkniu/encodec-pytorch/tree/main" target="_blank">checkpoint</a>] 
 </li>
 
 </ul>
 </font>
-<A NAME="Honors and awards"><h2>Honors and Awards</h2></A>
+<a name="Honors and awards"><h2>Honors and Awards</h2></a>
 <font size="3"> 
 <ul>
 <li>2024, Third Prize, 21/1600, Wenxin Cup Entrepreneurship Competition, Baidu.</li>
@@ -247,11 +279,11 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 </ul>
 </font>
 
-<A NAME="Activities"><h2>Activities</h2></A>
+<a name="Activities"><h2>Activities</h2></a>
 <font size="3"> 
 <ul>
-<li>2023.09-2024.9, <a href= "https://github.com/CS-BAOYAN" target="_blank">CS-BAOYAN owner</a> (an open-source CS-BAOYAN organization).</li>
-<li>2021.11-Now, <a href= "https://datawhale.club/" target="_blank">Datawhale member</a> (an open-source AI organization), helped data science fans get involved in the AI community.</li>
+<li>2023.09-2024.9, <a href="https://github.com/CS-BAOYAN" target="_blank">CS-BAOYAN owner</a> (an open-source CS-BAOYAN organization).</li>
+<li>2021.11-Now, <a href="https://datawhale.club/" target="_blank">Datawhale member</a> (an open-source AI organization), helped data science fans get involved in the AI community.</li>
 </ul>
 </font>
 
@@ -281,33 +313,27 @@ Will be updated in the future. -->
 
 </br></br></br></br>
 <!-- <script type="text/javascript" src="//rf.revolvermaps.com/0/0/6.js?i=5yaha4wk64q&amp;m=7&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script> -->
-<script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=000000&w=500&t=tt&d=mIxY2j5UCMhyHcb61rSeFnsPsRzjjBuB4sPdfTs1dMk&co=ffffff&ct=000000&cmo=3acc3a&cmn=ff5353'></script>
+<script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?cl=000000&w=500&t=tt&d=mIxY2j5UCMhyHcb61rSeFnsPsRzjjBuB4sPdfTs1dMk&co=ffffff&ct=000000&cmo=3acc3a&cmn=ff5353"></script>
 <div id="article"></div>
 <div id="back_top">
 <div class="arrow"></div>
 <div class="stick"></div>
 </div>
 
-<script>
+<script type="text/javascript">
 $(function(){
-    $(window).scroll(function(){  //If scroll
-        var scrollt = document.documentElement.scrollTop + document.body.scrollTop; //Getting Height after scroll
-        if( scrollt >400 )
-        {  
+    $(window).scroll(function(){
+        var scrollt = document.documentElement.scrollTop + document.body.scrollTop;
+        if( scrollt > 400 ) {  
             $("#back_top").fadeIn(400); 
-        }
-        else
-        {
+        } else {
             $("#back_top").stop().fadeOut(400);
         }
     });
 
-    $("#back_top").click(function(){ 
-
+    $("#back_top").click(function(){
         $("html,body").animate({scrollTop:"0px"}, 200);
-
     }); 
-
 });
 </script>
 
@@ -316,8 +342,8 @@ $(function(){
 <!-- All Rights Reserved by Yiyuan Yang. Part of page is generated by <a href="http://jemdoc.jaboc.net/">jemdoc</a>. -->
 
 
-<font size="2"; color="#A0A0A0";>
-<p style="text-align:center">Updating time: 2025.5.16</p>
+<font size="2" color="#A0A0A0">
+<p style="text-align:center">Updating time: 2025.8.20</p>
 </font>
 
 </body>
