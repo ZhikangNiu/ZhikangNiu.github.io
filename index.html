@@ -118,6 +118,20 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 </font>
 
 <font size="3"> 
+  <ul>
+  <!-- <p style="text-indent: -2.5rem;margin-left: 0rem;"> -->
+  <li> <b>Zhikang Niu</b>, Shujie Hu, Jeongsoo Choi, Yushen Chen, Peining Chen, Pengcheng Zhu, Yunting Yang, Bowen Zhang, Jian Zhao, Chunhui Wang, Xie Chen.<br />
+  <b>Semantic-VAE: Semantic-Alignment Latent Representation for Better Speech Synthesis.</b><br />
+  <!-- <i><b>SLT 2024</b></i>, -->
+  [<a href="https://arxiv.org/abs/2509.22167" target="_blank">Link</a>]
+  [<a href="https://arxiv.org/pdf/2509.22167.pdf" target="_blank">PDF</a>]
+  [<a href="https://github.com/ZhikangNiu/Semantic-VAE" target="_blank">Code</a>]
+  [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:XzqJv8VaDKcJ:scholar.google.com/&output=citation&scisdr=CgKXACcqEOuD0V-L0t0:AAZF9b8AAAAAaOSNyt0sj-9fUPRFzZzm_Q1AMIs&scisig=AAZF9b8AAAAAaOSNykB5mxD-g8dGqtIAAo3tlg0&scisf=4&ct=citation&cd=-1&hl=en">BibTeX</a>]
+  </p>
+  </ul>
+</font>
+
+<font size="3"> 
 <ul>
 <!-- <p style="text-indent: -2.5rem;margin-left: 0rem;"> -->
 <li> Jeongsoo Choi<sup>*</sup>, <b>Zhikang Niu<sup>*</sup></b>, Ji-Hoon Kim, Chunhui Wang, Joon Son Chung, Xie Chen.<br />
@@ -221,8 +235,8 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
     <!-- <a href="https://github.com/SWivid/F5-TTS" target="_blank">F5-TTS</a> has collected <b><font color="#FF0000">11,000+ stars</font></b> on GitHub.<br> -->
     [<a href="https://arxiv.org/abs/2508.06098" target="_blank">Link</a>]
     [<a href="https://arxiv.org/pdf/2508.06098" target="_blank">PDF</a>]
-    <!-- [<a href= "https://github.com/SWivid/F5-TTS" target="_blank">Code</a>] -->
-    <!-- [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:mabuw4cUBgYJ:scholar.google.com/&output=citation&scisdr=ClEsUoQnEI2Pm9TqM8I:AFWwaeYAAAAAZ2zsK8LxbCxd3NGHmZYe6ohDCeA&scisig=AFWwaeYAAAAAZ2zsK5y3MUlvYcPKpHnyK-5x0Oo&scisf=4&ct=citation&cd=-1&hl=zh-CN">BibTeX</a>] -->
+    [<a href= "https://github.com/xiquan-li/MeanAudio" target="_blank">Code</a>]
+    [<a href="https://scholar.googleusercontent.com/scholar.bib?q=info:z5x51JA1HcAJ:scholar.google.com/&output=citation&scisdr=CgKXACcqEOuD0V-JMCo:AAZF9b8AAAAAaOSPKCpl8M1RYE6AGAL8bbkorzY&scisig=AAZF9b8AAAAAaOSPKIB9vCenoguBZ4x24gwdQxY&scisf=4&ct=citation&cd=-1&hl=en">BibTeX</a>]
     <!-- [<a href="https://event.baai.ac.cn/live/852" target="_blank">Talk</a>] -->
     </p>
     </ul>
@@ -365,6 +379,121 @@ $(function(){
         $("html,body").animate({scrollTop:"0px"}, 200);
     }); 
 });
+</script>
+
+<script type="text/javascript">
+(function(){
+    function onReady(fn){
+        if(document.readyState !== 'loading') { fn(); }
+        else { document.addEventListener('DOMContentLoaded', fn); }
+    }
+
+    var ttlMs = 12 * 60 * 60 * 1000; // 12 hours
+
+    function cacheKey(owner, repo){
+        return 'gh_repo_' + owner + '_' + repo;
+    }
+
+    function getCached(owner, repo){
+        try {
+            var raw = localStorage.getItem(cacheKey(owner, repo));
+            if(!raw) return null;
+            var data = JSON.parse(raw);
+            if(!data || !data.ts || (Date.now() - data.ts > ttlMs)) return null;
+            return data.value;
+        } catch(e) { return null; }
+    }
+
+    function setCached(owner, repo, value){
+        try {
+            localStorage.setItem(cacheKey(owner, repo), JSON.stringify({ ts: Date.now(), value: value }));
+        } catch(e) {}
+    }
+
+    function parseRepo(href){
+        try {
+            var url = new URL(href, window.location.href);
+            if(url.hostname !== 'github.com') return null;
+            var parts = url.pathname.replace(/^\/+/, '').split('/');
+            if(parts.length < 2) return null;
+            var owner = parts[0];
+            var repo = parts[1];
+            if(!owner || !repo) return null;
+            return { owner: owner, repo: repo };
+        } catch(e) { return null; }
+    }
+
+    function formatNumber(n){
+        if(typeof n !== 'number') return '' + n;
+        if(n >= 1000){
+            var rounded = Math.round((n / 1000) * 10) / 10;
+            return (rounded % 1 === 0 ? rounded.toFixed(0) : rounded.toFixed(1)) + 'k';
+        }
+        return String(n);
+    }
+
+    function createBadge(text){
+        var span = document.createElement('span');
+        span.className = 'gh-stars-badge';
+        span.style.marginLeft = '6px';
+        span.style.color = '#555';
+        span.style.fontSize = '90%';
+        span.textContent = text;
+        return span;
+    }
+
+    function attachBadge(anchor, stars){
+        if(anchor && !anchor.dataset.ghStarsAppended){
+            anchor.dataset.ghStarsAppended = '1';
+            var badge = createBadge('⭐ ' + formatNumber(stars));
+            if(anchor.nextSibling){
+                anchor.parentNode.insertBefore(badge, anchor.nextSibling);
+            } else {
+                anchor.parentNode.appendChild(badge);
+            }
+        }
+    }
+
+    function fetchRepo(owner, repo){
+        var url = 'https://api.github.com/repos/' + owner + '/' + repo;
+        return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
+            .then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+            .then(function(j){ return j && j.stargazers_count; });
+    }
+
+    onReady(function(){
+        var anchors = Array.prototype.slice.call(document.querySelectorAll('a[href*="github.com/"]'));
+        if(!anchors.length) return;
+
+        var unique = {};
+        var repoToAnchors = {};
+        anchors.forEach(function(a){
+            var parsed = parseRepo(a.href);
+            if(!parsed) return;
+            var key = parsed.owner + '/' + parsed.repo;
+            unique[key] = parsed;
+            if(!repoToAnchors[key]) repoToAnchors[key] = [];
+            repoToAnchors[key].push(a);
+        });
+
+        Object.keys(unique).forEach(function(key){
+            var parsed = unique[key];
+            var cached = getCached(parsed.owner, parsed.repo);
+            if(cached != null){
+                repoToAnchors[key].forEach(function(a){ attachBadge(a, cached); });
+                return;
+            }
+            fetchRepo(parsed.owner, parsed.repo)
+                .then(function(stars){
+                    if(typeof stars === 'number'){
+                        setCached(parsed.owner, parsed.repo, stars);
+                        repoToAnchors[key].forEach(function(a){ attachBadge(a, stars); });
+                    }
+                })
+                .catch(function(){ /* ignore errors to avoid blocking page */ });
+        });
+    });
+})();
 </script>
 
 
