@@ -4,7 +4,11 @@
 <meta name="robots" content="index, follow" />
 <meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="keywords" content="Zhikang Niu, 牛志康, Audio Signal Processing, Speech Multimodal Large Language Model, Deep Learning, machine learning, Xidian University">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Spectral:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="./Files/jemdoc.css" type="text/css" />
 <script src="jquery.min.js"></script>
 <link rel="shortcut icon" href="./images/book.png">
@@ -24,6 +28,11 @@
   .edu-list .date { font-weight: bold; white-space: nowrap; }
   .edu-list .detail { line-height: 1.5; }
   .edu-list a { word-break: break-word; }
+  .edu-note { color: #5c657e; font-size: 0.95em; }
+  @media (max-width: 760px) {
+    .edu-list li { grid-template-columns: 1fr; row-gap: 4px; }
+    .edu-list .date { font-weight: 600; }
+  }
 </style>
 <!-- ==================================================================== -->
 
@@ -36,36 +45,71 @@
 <div id="container"> 
 <div class="container"> 
 
+<div class="hero">
 <table class="imgtable"><tr><td>
-<a href="./"><img src="./images/zhikangniu_cartoon.png" alt="" height="220px" style="box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); border-radius: 5px;" /></a>&nbsp;</td>
-<td align="left"><h1 style="margin-top: 0; margin-bottom: 10px;"><a href="./">Zhikang Niu (<span style="font-family:Microsoft YaHei">牛志康</span>)</a></h1>
-<br />
+<a href="./"><img src="./images/zhikangniu_cartoon.png" alt="" height="220" class="profile-photo" /></a>&nbsp;</td>
+<td align="left"><h1><a href="./">Zhikang Niu (<span style="font-family:KaiTi, STKaiti, KaiTi_GB2312, serif">牛志康</span>)</a></h1>
+<!-- <br /> -->
 Ph.D. Student. 
 <a href="https://x-lance.github.io/" target="_blank">Cross Media (X-)Language Intelligence Lab</a><br />
 <a href="https://www.cs.sjtu.edu.cn/" target="_blank">Department of Computer Science and Engineering</a>, <a href="https://www.sjtu.edu.cn/" target="_blank">Shanghai Jiao Tong University.</a><br />
 Work at Shanghai Innovation Institute.
 <br />
-<br />
-<class="staffshortcut">
- <a href="#Interest">Research Interests</a> | 
- <a href="#Education and intern">Education and Intern</a> | 
- <a href="#Publications">Publications</a> | 
- <a href="#Projects">Projects</a> | 
- <a href="#Honors and awards">Honors and Awards</a> |
- <a href="#Activities">Activities</a> | 
+<!-- <br /> -->
+<div class="contact-meta">
+  <span class="meta-item">
+    <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M12 2c3.86 0 7 3.13 7 7 0 5.25-7 13-7 13S5 14.25 5 9c0-3.87 3.14-7 7-7zm0 3.3a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4z" /></svg></span>
+    Shanghai, China
+  </span>
+  <span class="meta-divider" aria-hidden="true">•</span>
+  <span class="meta-item">
+    <span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M12 2a10 10 0 1 0 .01 20.01A10 10 0 0 0 12 2zm0 1.8a8.2 8.2 0 1 1 0 16.4 8.2 8.2 0 0 1 0-16.4zm-.9 3.3v5.2l4.6 2.7.9-1.5-3.7-2.1V7.1h-1.8z" /></svg></span>
+    <span id="shanghai-time" aria-live="polite"></span>
+  </span>
+</div>
+<div class="staffshortcut">
+ <a href="#Interest">Research Interests</a>
+ <a href="#Education">Education</a>
+ <a href="#Research Experience">Research Experience</a>
+ <a href="#Publications">Publications</a>
+ <a href="#Research Projects">Research Projects</a>
+ <a href="#Honors and awards">Honors and Awards</a>
+ <a href="#Activities">Activities</a>
  <!-- <A HREF="#Invited talks and lives">Invited Talks and Lives</A> -->
-<br />
-<br />
-if you have any questions, please feel free to contact me with <a href="mailto:zhikangniu@sjtu.edu.cn">zhikangniu@sjtu.edu.cn</a>
-<br />
+</div>
+<div class="contact-note">
+if you have any questions, please feel free to contact me with <a href="mailto:zhikangniu@sjtu.edu.cn"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v.01l9 6 9-6V7H3zm18 10V9l-8.4 5.6a1 1 0 0 1-1.2 0L3 9v8h18z" /></svg></span>zhikangniu@sjtu.edu.cn</a>
+</div>
 <!-- 添加邮件 -->
 <!-- [<a href="mailto:zhikangniu@sjtu.edu.cn">Email</a>] -->
-[<a href="https://github.com/ZhikangNiu" target="_blank">GitHub</a>] 
-[<a href="https://scholar.google.com/citations?user=mXSpi2kAAAAJ&hl=en" target="_blank">Google Scholar</a>] 
-[<a href="./assets/WeChat_QR.jpg" target="_blank">WeChat</a>]
+<div class="contact-links">
+[<a href="https://github.com/ZhikangNiu" target="_blank"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" focusable="false"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" /></svg></span>GitHub</a>] 
+[<a href="https://scholar.google.com/citations?user=mXSpi2kAAAAJ&hl=en" target="_blank"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M12 3 1 8l11 5 9-4.09V15h2V8L12 3zm-7 9.5V17c0 .38.22.72.56.88L12 20l6.44-2.12A1 1 0 0 0 19 17v-4.5l-7 3.5-7-3.5z" /></svg></span>Google Scholar</a>] 
+[<a href="./assets/WeChat_QR.jpg" target="_blank"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M9.5 3C5.36 3 2 5.69 2 9c0 2.14 1.41 4.03 3.5 5.08L5 18l3.33-2.11c.38.05.76.07 1.17.07.08 0 .16 0 .24-.01A6.17 6.17 0 0 1 9 13c0-3.17 2.69-5.75 6-5.75.24 0 .48.01.71.04C14.79 4.77 12.36 3 9.5 3zm-3 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm5 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" /><path d="M15 8c3.31 0 6 2.46 6 5.5 0 1.83-1.05 3.45-2.67 4.47L18 21l-2.88-1.72c-.36.05-.74.07-1.12.07-3.31 0-6-2.46-6-5.5S10.69 8 14 8h1zm-3 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" /></svg></span>WeChat</a>]
 <!-- [<a href="./assets/resume-zh_CN.pdf" target="_blank">Chinese Resume</a>] -->
-[<a href="./assets/resume_en.pdf" target="_blank">CV</a>]
+[<a href="./assets/resume_en.pdf" target="_blank"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V9h5.5L14 3.5z" /><path d="M8 12h8v1.6H8V12zm0 3.5h8v1.6H8v-1.6z" /></svg></span>Resume</a>]
+</div>
+<script type="text/javascript">
+  (function () {
+    var timeEl = document.getElementById("shanghai-time");
+    if (!timeEl || !window.Intl) {
+      return;
+    }
+    var formatter = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Shanghai",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+    function updateTime() {
+      timeEl.textContent = formatter.format(new Date());
+    }
+    updateTime();
+    setInterval(updateTime, 30000);
+  })();
+</script>
 </td></tr></table>
+</div>
 
 
  
@@ -78,8 +122,22 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 </ul>
 
 
-<!-- ===================== Education and Intern (aligned) ===================== -->
-<a name="Education and intern"><h2>Education and Intern</h2></a>
+<!-- ===================== Education (aligned) ===================== -->
+<a name="Education"><h2>Education</h2></a>
+<ul class="edu-list">
+  <li>
+    <span class="date">2024.09–2029.06</span>
+    <span class="detail">Ph.D. Student, <a href="https://www.cs.sjtu.edu.cn/" target="_blank">Department of Computer Science and Engineering</a>, <a href="https://www.sjtu.edu.cn/" target="_blank">Shanghai Jiao Tong University</a>. </span>
+  </li>
+  <li>
+    <span class="date">2020.09–2024.06</span>
+    <span class="detail">Bachelor Degree of Engineering, <a href="https://sai.xidian.edu.cn/" target="_blank">School of Artificial Intelligence</a>, <a href="https://www.xidian.edu.cn/" target="_blank">Xidian University</a>.</span>
+  </li>
+</ul>
+<!-- ================================================================= -->
+
+<!-- ===================== Internships (aligned) ===================== -->
+<a name="Research Experience"><h2>Research Experience</h2></a>
 <ul class="edu-list">
   <li>
     <span class="date">2025.07–current</span>
@@ -93,12 +151,8 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
     <span class="date">2023.08–2024.09</span>
     <span class="detail">Research Intern, Natural Language Computing Group (NLC), <a href="https://www.msra.cn/" target="_blank">Microsoft Research Asia (MSRA)</a>. Led by <a href="https://thegenerality.com/" target="_blank">Furu Wei</a>, supervised by <a href="https://www.microsoft.com/en-us/research/people/shujliu/" target="_blank">Shujie Liu</a> and <a href="https://long-zhou.github.io/" target="_blank">Long Zhou</a>. Focus on Audio Codec and Speech Synthesis.</span>
   </li>
-  <li>
-    <span class="date">2020.09–2024.06</span>
-    <span class="detail">Bachelor Degree of Engineering, <a href="https://sai.xidian.edu.cn/" target="_blank">School of Artificial Intelligence</a>, <a href="https://www.xidian.edu.cn/" target="_blank">Xidian University</a>.</span>
-  </li>
 </ul>
-<!-- ======================================================================== -->
+<!-- =================================================================== -->
 
  
 <a name="Publications"><h2>Publications</h2></a>
@@ -230,8 +284,8 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 
 <font size="3"> 
   <ul>
-  <li> Yuzhe Liang, Wenzhe Liu, Chunyu Qiang, <b>Zhikang Niu</b>, Yushen Chen, Ziyang Ma, Wenxi Chen, Nan Li, Chen Zhang, Xie Chen.<br />
-  <b>Towards Flow-Matching-based TTS without Classifier-Free Guidance.</b>
+  <li> Yuzhe Liang, Wenzhe Liu, Chunyu Qiang, <b>Zhikang Niu</b>, Yushen Chen, Ziyang Ma, et al.<br />
+  <b>Towards Flow-Matching-based TTS without Classifier-Free Guidance.</b><br />
   <!-- <a href="https://github.com/SWivid/F5-TTS" target="_blank">F5-TTS</a> has collected <b><font color="#FF0000">11,000+ stars</font></b> on GitHub.<br> -->
   [<a href="https://arxiv.org/abs/2504.20334" target="_blank">Link</a>]
   [<a href="https://arxiv.org/pdf/2504.20334" target="_blank">PDF</a>]
@@ -315,7 +369,7 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 </ul>
 </font>
 
-<a name="Projects"><h2>Projects</h2></a>
+<a name="Research Projects"><h2>Research Projects</h2></a>
 <b>Open-Source Projects</b>:
 <font size="3"> 
 <ul>
@@ -357,7 +411,7 @@ I work in the field of Audio Singal Processing, Audio Codec Model,Multimodal Lar
 <ul>
 <li>ICME Reviewer, 2025, 2026</li>
 <li>2023.09-2024.9, <a href="https://github.com/CS-BAOYAN" target="_blank">CS-BAOYAN owner</a> (an open-source CS-BAOYAN organization).</li>
-<li>2021.11-Now, <a href="https://datawhale.club/" target="_blank">Datawhale member</a> (an open-source AI organization), helped data science fans get involved in the AI community.</li>
+<li>2021.11-Now, <a href="https://github.com/datawhalechina" target="_blank">Datawhale member</a> (an open-source AI organization), helped data science fans get involved in the AI community.</li>
 <li>2021.11-Now, <a href="https://github.com/X-LANCE/Xmart" target="_blank">Xmart forum maintainer</a> (an open-source student forum from SJTU X-LANCE Lab), for helping students get involved in the speech AI community.</li>
 </ul>
 </font>
