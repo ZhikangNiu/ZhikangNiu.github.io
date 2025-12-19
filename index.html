@@ -548,6 +548,9 @@ $(function(){
 
     onReady(function(){
         var anchors = Array.prototype.slice.call(document.querySelectorAll('a[href*="github.com/"]'));
+        anchors = anchors.filter(function(a){
+            return (a.textContent || '').trim() === 'Code';
+        });
         if(!anchors.length) return;
 
         var unique = {};
