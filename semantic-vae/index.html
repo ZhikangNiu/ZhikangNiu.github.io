@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="generator" content="Hugo 0.88.1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link rel="stylesheet" href=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<link rel="stylesheet" href="css/normalize.css">
+
+	<title>Semantic-VAE</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+
+<body data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="">
+
+<div class="container" >
+<header role="banner">
+</header>
+<main role="main">
+<article itemscope itemtype="https://schema.org/BlogPosting">
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<div class="text-center">
+		<h3 style="font-weight: 700;">Semantic-VAE: Semantic-Alignment Latent Representation for Better Speech Synthesis</h3>
+		<div class="resource-links">
+			<span>[<a class="icon-link" href="https://arxiv.org/abs/2509.22167"><i class="fa-regular fa-file-lines link-icon"></i>Paper</a>]</span>
+			<span>[<a class="icon-link" href="https://github.com/ZhikangNiu/Semantic-VAE"><i class="fa-brands fa-github link-icon"></i>Code</a>]</span>
+			<span>[<a class="icon-link" href="https://huggingface.co/zkniu/Semantic-VAE"><img class="link-icon hf-icon" src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="">Checkpoints</a>]</span>
+		</div>
+
+		<h6 style="font-weight: 700;">
+			<br>Zhikang Niu<sup>1,2</sup>, Shujie Hu<sup>3</sup>, Jeongsoo Choi<sup>4</sup>, Yushen Chen<sup>1,2</sup>, Peining Chen<sup>1</sup>, Pengcheng Zhu<sup>5</sup>, Yunting Yang<sup>5</sup>,<br> Bowen Zhang<sup>5</sup>, Jian Zhao<sup>5</sup>, Chunhui Wang<sup>5</sup>, Xie Chen<sup>1,2</sup>
+		</h6>
+		<p>
+			<sup>1</sup>MoE Key Lab of Artificial Intelligence, X-LANCE Lab, School of Computer Science,<br> Shanghai Jiao Tong University, China<br>
+			<sup>2</sup>Shanghai Innovation Institute, China<br>
+			<sup>3</sup>The Chinese University of Hong Kong, China<br>
+			<sup>4</sup>Korea Advanced Institute of Science and Technology, South Korea<br>
+			<sup>5</sup>Geely, China
+		</p>
+	</div>
+	<p>
+        <b>Abstract.</b>
+		While mel-spectrograms have been widely utilized as intermediate representations in zero-shot text-to-speech (TTS), their inherent redundancy leads to inefficiency in learning text-speech alignment. Compact VAE-based latent representations have recently emerged as a stronger alternative, but they also face a fundamental optimization dilemma: higher-dimensional latent spaces improve reconstruction quality and speaker similarity, but degrade intelligibility, while lower-dimensional spaces improve intelligibility at the expense of reconstruction fidelity. To overcome this dilemma, we propose Semantic-VAE, a novel VAE framework that utilizes semantic alignment regularization in the latent space. This design alleviates the reconstruction-generation trade-off by capturing semantic structure in high-dimensional latent representations. Extensive experiments demonstrate that Semantic-VAE significantly improves synthesis quality and training efficiency. When integrated into F5-TTS, our method achieves 2.10% WER and 0.64 speaker similarity on LibriSpeech-PC, outperforming mel-based systems (2.23%, 0.60) and vanilla acoustic VAE baselines (2.65%, 0.59). We also release the code and models to facilitate further research.
+	</p>
+	<p>
+		<b>Contents</b>
+		<ul>
+			<li><a href="#model-overview">Model Overview</a></li>
+			<li><a href="#training-steps">Performance over Training Steps</a></li>
+			<li><a href="#model-comparison">Model Comparison</a></li>
+			<li><a href="#citation">Citation</a></li>
+    	</ul>
+	</p>
+</div>
+
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<h2 id="model-overview" style="text-align: center;">Model Overview</h2>
+	<p style="text-align: center;">
+		<img src="pics/overview.png" height="600" width="600">
+	</p>
+	<p style="text-align: center;" >
+		<b>Figure 1.</b> Overall training framework. The encoder maps the input into latent representations, regularized by a KL loss.
+		The decoder reconstructs the waveform guided by a discriminator loss, while a semantic regularization loss aligns the latent space with features from a frozen pre-trained SSL model.
+	</p>
+</div>
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<h2 id="training-steps" style="text-align: center;">Performance over Training Steps</h2>
+	<p style="text-align: center;">
+		<img src="pics/librispeech_dual_axis.png" height="300" width="600">
+	</p>
+	<p style="text-align: center;" >
+		<b>Figure 2.</b> Comparison of WER and SIM on the LibriSpeech-PC test-clean dataset between the F5-TTS baseline, Vallina VAE, and Semantic-VAE across different training steps.
+	</p>
+	<br>
+</div>
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded">
+	<h2 id="model-comparison" style="text-align: center;">Model Comparison</h2>
+	<br>
+	<p>* Each text below each audio is ASR transcribed and normalized.</p>
+	<br>
+	<h5>Text: Harangue The tiresome product of a tireless tongue.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/121-121726-0004.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/121-121726-0001.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Harangue The tiresome product of a tireless tongue.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/121-121726-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>hair range<span class="asr-missing">[missing: Harangue]</span> the <span class="asr-extra">tires and</span> <span class="asr-missing">[missing: tiresome]</span> product <span class="asr-extra">too</span> of <span class="asr-extra">the</span> <span class="asr-missing">[missing: a]</span> tireless tongue</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/121-121726-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p><span class="asr-extra">Herring,</span> <span class="asr-missing">[missing: Harangue]</span> the tiresome product of a tireless tongue.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/121-121726-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>harangue the tiresome product of a tireless tongue</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/121-121726-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>harangue the tiresome product of a tireless tongue</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/121-121726-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>harangue the tiresome product of a tireless tongue</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<h5>Text: So I return rebuked to my content, And gain by ill thrice more than I have spent.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/121-121726-0011.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/121-123859-0004.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>So I return rebuked to my content, And gain by ill thrice more than I have spent.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/121-123859-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p><span class="asr-extra">syretan rebuke</span> <span class="asr-missing">[missing: So I return rebuked]</span> to my <span class="asr-extra">contef</span> <span class="asr-missing">[missing: content,]</span> and <span class="asr-extra">deign</span> <span class="asr-missing">[missing: gain]</span> by ill thrice more than i have spent</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/121-123859-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>so i return <span class="asr-extra">rebuke</span> <span class="asr-missing">[missing: rebuked]</span> to my content and gain <span class="asr-extra">thy an ale</span> <span class="asr-missing">[missing: by ill]</span> thrice more than i have spent</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/121-123859-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>So I return <span class="asr-extra">rebuke</span> <span class="asr-missing">[missing: rebuked]</span> to my content, <span class="asr-missing">[missing: And]</span> Gain by ill thrice more than I have spent.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/121-123859-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>So I return rebuked to my content, And gain by ill thrice more than I have spent.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/121-123859-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>So I return rebuked to my content, And gain by ill thrice more than I have spent.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<h5>Text: Then of a sudden, at midday, the sun shot out, hot and still; no breath of air stirred; the sky was like blue steel; the earth steamed.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/1995-1837-0005.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/1995-1837-0007.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Then of a sudden, at midday, the sun shot out, hot and still; no breath of air stirred; the sky was like blue steel; the earth steamed.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/1995-1837-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Then of a sudden, at midday, the sun shot out hot and still. No breath of air stirred. The sky was like blue steel. The earth steamed.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/1995-1837-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>then of a sudden at midday the sun shot out hot and still no breath of air stirred the sky was like blue steel the earth steamed</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/1995-1837-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>then of a sudden at mid-day the sun shot out hot and still no breath of air stirred the sky was like blue steel the earth steamed</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/1995-1837-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Then of a sudden, at midday, the sun shot out, hot and still. No breath of air stirred. The sky was like blue steel. The earth steamed.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/121-123859-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Then of a sudden, at midday, the sun shot out, hot and still. No breath of air stirred. The sky was like blue steel. The earth steamed.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<h5>Text: Several clothes horses, a pillion, a spinning wheel, and an old box wide open and stuffed full of coloured rags.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/2094-142345-0025.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/2094-142345-0005.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Several clothes horses, a pillion, a spinning wheel, and an old box wide open and stuffed full of coloured rags.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/2094-142345-0005.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>several <span class="asr-extra">clotheless</span> <span class="asr-missing">[missing: clothes]</span> horses, a pillion, a spinning wheel, and an old box wide open and stuffed full of colored rags.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/2094-142345-0005.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>several clothes-horses, a pillion, a spinning-wheel, and an old box wide open and stuffed full of colored rags.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/2094-142345-0005.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Several clothes-horses, a pillion, a spinning-wheel, and an old box wide open and stuffed full of colored rags.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/2094-142345-0005.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>several clothes-horses, a pillion, a spinning-wheel, and an old box <span class="asr-missing">[missing: wide]</span> open and stuffed full of colored rags.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/2094-142345-0005.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>several clothes-horses, a pillion, a spinning-wheel, and an old box wide open and stuffed full of colored rags.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<!-- <h5>Text: Saturday after Saturday comes round, and I can have no hope of hearing your knock at the door, and then being told that 'Miss E. is come'. Oh, dear!
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/3575-170457-0021.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/3575-170457-0033.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Saturday after Saturday comes round, and I can have no hope of hearing your knock at the door, and then being told that 'Miss E. is come'. Oh, dear!
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/3575-170457-0033.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Saturday after Saturday comes round, and I can <span class="asr-missing">[missing: have no]</span> hope of hearing your knock at the door, and then being told that <span class="asr-extra">Missy—oh, damn!</span> <span class="asr-missing">[missing: &#x27;Miss E. is come&#x27;. Oh, dear!]</span></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/3575-170457-0033.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Saturday after Saturday comes round \&quot;&#x27;and I <span class="asr-missing">[missing: can]</span> have no hope of hearing your knock at the door \&quot;&#x27;and then being told that Miss <span class="asr-extra">A&#x27;s</span> <span class="asr-missing">[missing: E. is]</span> come. \&quot;&#x27;Oh, dear!&#x27;</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/3575-170457-0033.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Saturday after Saturday comes round, \&quot;&#x27;and I can have no hope of hearing your knock at the door \&quot;&#x27;and then being told that <span class="asr-extra">Missy has</span> <span class="asr-missing">[missing: &#x27;Miss E. is]</span> come. \&quot;&#x27;Oh, dear!&#x27;</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/3575-170457-0033.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Saturday after Saturday comes round, and I can have no hope of hearing your knock at the door, and then being told that <span class="asr-extra">Missy</span> <span class="asr-missing">[missing: &#x27;Miss E.]</span> is come. Oh, dear!</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/3575-170457-0033.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Saturday after Saturday comes round, and I can have no hope of hearing your knock at the door, and then being told that <span class="asr-extra">Missy</span> <span class="asr-missing">[missing: &#x27;Miss E.]</span> is come. Oh, dear!</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br> -->
+
+	<h5>Text: It is such a noble ambition, that it is a pity it has usually such a shallow foundation.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/4970-29093-0008.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/4970-29093-0007.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>It is such a noble ambition, that it is a pity it has usually such a shallow foundation.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/4970-29093-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it is such a noble ambition that <span class="asr-missing">[missing: it]</span> is a pity <span class="asr-missing">[missing: it]</span> has usually such a shallow foundation</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/4970-29093-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>it is such a noble ambition that it is a pity it has usually such a shallow foundation <span class="asr-extra">you</span></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/4970-29093-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>It is such a noble ambition, that it is a pity it has usually such a shallow foundation.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/4970-29093-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>It is such a noble ambition, that it is a pity it has usually such a shallow foundation.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/4970-29093-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>It is such a noble ambition, that it is a pity it has usually such a shallow foundation.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<h5>Text: Why, it's in Missouri somewhere, on the frontier I think. We'll get a map".
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/4970-29093-0004.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/4970-29093-0020.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Why, it's in Missouri somewhere, on the frontier I think. We'll get a map".
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/4970-29093-0020.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Why, it&#x27;s in Missouri somewhere, on the frontier, I think. We&#x27;ll get a map.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/4970-29093-0020.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Why, it&#x27;s in Missouri somewhere, on the frontier, I think. We&#x27;ll get a map.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/4970-29093-0020.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Why, it&#x27;s in Missouri somewhere. On the frontier, I think. We&#x27;ll get a map.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/4970-29093-0020.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Why, it&#x27;s in Missouri somewhere. On the frontier, I think. We&#x27;ll get a map.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/4970-29093-0020.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Why, it&#x27;s in Missouri somewhere. On the frontier, I think. We&#x27;ll get a map.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<!-- <h5>Text: Grandfather was Alexander Carey, L L. D., - Doctor of Laws, that is".
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/4992-41797-0003.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/4992-41797-0002.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Grandfather was Alexander Carey, L L. D., - Doctor of Laws, that is".
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/4992-41797-0002.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>grandfather was alexander carey <span class="asr-missing">[missing: L L. D.,]</span> doctor of laws that is</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/4992-41797-0002.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>grandfather was alexander carey <span class="asr-extra">leil adieu</span> <span class="asr-missing">[missing: L L. D.,]</span> doctor of laws that is</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/4992-41797-0002.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>grandfather was alexander carey <span class="asr-extra">ileal</span> <span class="asr-missing">[missing: L L.]</span> d doctor of laws that is</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/4992-41797-0002.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>grandfather was alexander carey <span class="asr-missing">[missing: L]</span> l d doctor of laws that is</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/4992-41797-0002.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>grandfather was alexander carey <span class="asr-missing">[missing: L]</span> l d doctor of laws that is</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br> -->
+
+	<h5>Text: Servadac took it for granted that the Dobryna was endeavoring to put in.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/5105-28240-0014.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/5105-28240-0007.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Servadac took it for granted that the Dobryna was endeavoring to put in.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/5105-28240-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Servadac took it for granted that the <span class="asr-extra">Dorbina</span> <span class="asr-missing">[missing: Dobryna]</span> was endeavoring to put in.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/5105-28240-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p><span class="asr-extra">Cervidac</span> <span class="asr-missing">[missing: Servadac]</span> took it for granted that the <span class="asr-extra">Dabrina</span> <span class="asr-missing">[missing: Dobryna]</span> was endeavoring to put in.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/5105-28240-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p><span class="asr-extra">Cervidac</span> <span class="asr-missing">[missing: Servadac]</span> took it for granted that the <span class="asr-extra">Dobrena</span> <span class="asr-missing">[missing: Dobryna]</span> was endeavoring to put in.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/5105-28240-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Servadac took it for granted that the <span class="asr-extra">Dobrina</span> <span class="asr-missing">[missing: Dobryna]</span> was endeavoring to put in.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/5105-28240-0007.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Servadac took it for granted that the <span class="asr-extra">Dobrina</span> <span class="asr-missing">[missing: Dobryna]</span> was endeavoring to put in.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+
+	<h5>Text: Would not the loftiest eminences of the city at least be visible?
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/5105-28240-0014.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/5105-28241-0013.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Would not the loftiest eminences of the city at least be visible?
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/5105-28241-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Would not the loftiest eminences of the city at least be visible?</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/5105-28241-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Would not the loftiest eminences of the city at least be visible?</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/5105-28241-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Would not the loftiest eminences of the city at least be visible?</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/5105-28241-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Would not the loftiest eminences of the city at least be visible?</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/5105-28241-0013.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Would not the loftiest eminences of the city at least be visible?</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+
+	<h5>Text: Then I will get me a farm and will winter in that land. Now who will follow me?
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/5142-33396-0050.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/5142-33396-0012.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Then I will get me a farm and will winter in that land. Now who will follow me?
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/5142-33396-0012.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>then i will get me a farm and will winter in that land now who will follow me</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/5142-33396-0012.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>then I will get me a farm and will winter in that land, now who will follow me.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/5142-33396-0012.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Then I will get me a farm and will <span class="asr-extra">winner</span> <span class="asr-missing">[missing: winter]</span> in that land now who will follow me</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/5142-33396-0012.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>then i will get me a farm and will winter in that land now who will follow me</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/5142-33396-0012.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>then i will get me a farm and will winter in that land now who will follow me</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+
+	<h5>Text: I like you still, Rachel; I'm sure I'll always like you.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/5683-32865-0003.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/5683-32879-0022.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>I like you still, Rachel; I'm sure I'll always like you.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/5683-32879-0022.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;I like you still, Rachel. I&#x27;m sure I&#x27;ll always like you.&#x27;</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/5683-32879-0022.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;I like you still, Rachel. I&#x27;m sure I&#x27;ll always like you.&#x27;</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/5683-32879-0022.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>I like you still, Rachel. I&#x27;m sure I&#x27;ll always like you.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/5683-32879-0022.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>I like you still, Rachel. I&#x27;m sure I&#x27;ll always like you.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/5683-32879-0022.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>I like you still, Rachel. I&#x27;m sure I&#x27;ll always like you.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+
+	<h5>Text: Friends," said Montfichet, faintly, to the wrestlers, "bear us escort so far as the Sheriff's house.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/61-70968-0003.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/61-70968-0043.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Friends," said Montfichet, faintly, to the wrestlers, "bear us escort so far as the Sheriff's house.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/61-70968-0043.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Friends,&#x27; said <span class="asr-extra">Mount Fitchet,</span> <span class="asr-missing">[missing: Montfichet,]</span> faintly, \&quot;&#x27;to the wrestlers. \&quot;&#x27;Bear us escort so far as the sheriff&#x27;s house.&#x27;</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/61-70968-0043.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Friends, said Montfichet faintly to the wrestlers, bear us <span class="asr-extra">escorts</span> <span class="asr-missing">[missing: escort]</span> so far as the sheriff&#x27;s house.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/61-70968-0043.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Friends,&#x27; said <span class="asr-extra">Montvichet,</span> <span class="asr-missing">[missing: Montfichet,]</span> faintly to the wrestlers, <span class="asr-extra">\&quot;&#x27;Barros Escofar is</span> <span class="asr-missing">[missing: &quot;bear us escort so far as]</span> the sheriff&#x27;s house.&#x27;</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/61-70968-0043.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Friends, said <span class="asr-extra">Monfichet</span> <span class="asr-missing">[missing: Montfichet,]</span> faintly to the wrestlers, bear us escort so far as the sheriff&#x27;s house</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/61-70968-0043.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Friends, said <span class="asr-extra">Monfichet</span> <span class="asr-missing">[missing: Montfichet,]</span> faintly to the wrestlers, bear us escort so far as the sheriff&#x27;s house</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<!-- <h5>Text: Nay, nay, lording," answered Warrenton, with a half laugh.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/61-70968-0039.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/61-70970-0034.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Nay, nay, lording," answered Warrenton, with a half laugh.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/61-70970-0034.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p><span class="asr-missing">[missing: Nay,]</span> \&quot;&#x27;Nay, lording,&#x27; answered <span class="asr-extra">Warrington,</span> <span class="asr-missing">[missing: Warrenton,]</span> with a half-laugh</span></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/61-70970-0034.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Nay, nay, lording,&#x27; answered <span class="asr-extra">Warrington,</span> <span class="asr-missing">[missing: Warrenton,]</span> with a half-laugh</span></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/61-70970-0034.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Nay, nay, lording, answered <span class="asr-extra">Warrington,</span> <span class="asr-missing">[missing: Warrenton,]</span> with a half-laugh</span></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/61-70970-0034.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Nay, nay, lording,&#x27; answered <span class="asr-extra">Warrington</span> <span class="asr-missing">[missing: Warrenton,]</span> with a half-laugh</span></p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/61-70970-0034.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Nay, nay, lording,&#x27; answered <span class="asr-extra">Warrington</span> <span class="asr-missing">[missing: Warrenton,]</span> with a half-laugh</span></p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br> -->
+
+
+	<!-- <h5>Text: Who is Humpy Dumpy"? asked the Mice.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/672-122797-0000.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/672-122797-0058.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Who is Humpy Dumpy"? asked the Mice.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/672-122797-0058.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Who is <span class="asr-extra">Humpy-Dumpy?&#x27;</span> <span class="asr-missing">[missing: Humpy Dumpy&quot;?]</span> asked the mice.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/672-122797-0058.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Who is <span class="asr-extra">Humpy-Dumpy?</span> <span class="asr-missing">[missing: Humpy Dumpy&quot;?]</span> asked the mice.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/672-122797-0058.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Who is <span class="asr-extra">Humpy-Dumpy?&#x27;</span> <span class="asr-missing">[missing: Humpy Dumpy&quot;?]</span> asked the mice.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/672-122797-0058.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Who is <span class="asr-extra">Humpy-Dumpy?&#x27;</span> <span class="asr-missing">[missing: Humpy Dumpy&quot;?]</span> asked the mice.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/672-122797-0058.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;Who is <span class="asr-extra">Humpy-Dumpy?&#x27;</span> <span class="asr-missing">[missing: Humpy Dumpy&quot;?]</span> asked the mice.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br> -->
+
+
+	<h5>Text: His conduct and presence of mind in this emergence appeared conspicuous.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/8224-274384-0003.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/8224-274381-0011.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>His conduct and presence of mind in this emergence appeared conspicuous.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/8224-274381-0011.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>His conduct and presence of mind in this emergence appeared conspicuous.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/8224-274381-0011.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>His conduct and presence of mind <span class="asr-extra">appeared conspemergence,</span> <span class="asr-missing">[missing: in this emergence]</span> appeared conspicuous.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/8224-274381-0011.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>his conduct and presence of mind in this emergence appeared conspicuous.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/8224-274381-0011.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>His conduct and presence of mind in this emergence appeared conspicuous.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/8224-274381-0011.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>His conduct and presence of mind in this emergence appeared conspicuous.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+
+	<h5>Text: Lieutenant Crosstrees is a very gallant officer.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/8455-210777-0020.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/8455-210777-0049.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Lieutenant Crosstrees is a very gallant officer.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/8455-210777-0049.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p><span class="asr-extra">I&#x27;m no he.</span> Lieutenant <span class="asr-extra">Crustrees</span> <span class="asr-missing">[missing: Crosstrees]</span> is a very gallant officer.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/8455-210777-0049.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Lieutenant <span class="asr-extra">Crossstrees</span> <span class="asr-missing">[missing: Crosstrees]</span> is a very gallant officer.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/8455-210777-0049.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Lieutenant Crosstrees is a very gallant officer.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/8455-210777-0049.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Lieutenant Crosstrees is a very gallant officer.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/8455-210777-0049.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Lieutenant Crosstrees is a very gallant officer.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+
+
+	<h5>Text: Hold him fast, my men, and as soon as I've had my coffee and oatmeal I'll take him to the Room of the Great Knife and patch him".
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/8555-284447-0003.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/8555-284447-0001.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Hold him fast, my men, and as soon as I've had my coffee and oatmeal I'll take him to the Room of the Great Knife and patch him".
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/8555-284447-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>hold him fast my men and as soon as i&#x27;ve had my coffee and oatmeal i&#x27;ll take him to the room of the great knife and patch him</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/8555-284447-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>hold him fast my men and as soon as i&#x27;ve had my coffee and oatmeal i&#x27;ll take him to the room of the great knife and patch him</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/8555-284447-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>hold him fast my men and as soon as i&#x27;ve had <span class="asr-missing">[missing: my]</span> coffee and oatmeal i&#x27;ll take him to the room of the great knife and patch him</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/8555-284447-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>hold him fast my men and as soon as i&#x27;ve had my coffee and oatmeal i&#x27;ll take him to the room of the great knife and patch him</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/8555-284447-0001.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>hold him fast my men and as soon as i&#x27;ve had my coffee and oatmeal i&#x27;ll take him to the room of the great knife and patch him</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br>
+
+	<!-- <h5>Text: As soon as they entered the Room of the Great Knife the Boolooroo gave a yell of disappointment.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/8555-284447-0020.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/8555-284447-0004.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>As soon as they entered the Room of the Great Knife the Boolooroo gave a yell of disappointment.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/8555-284447-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>\&quot;&#x27;As soon as they entered the room of the great knife, \&quot;&#x27;the <span class="asr-extra">buluru</span> <span class="asr-missing">[missing: Boolooroo]</span> gave a yell of disappointment.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/8555-284447-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>as soon as they entered the room of the great knife the <span class="asr-extra">boolaroo</span> <span class="asr-missing">[missing: Boolooroo]</span> gave a yell of disappointment</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/8555-284447-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>As soon as they entered the room of the great knife, the <span class="asr-extra">bularoo</span> <span class="asr-missing">[missing: Boolooroo]</span> gave a yell of disappointment.</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/8555-284447-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>As soon as they entered the room of the great knife, the <span class="asr-extra">bularoo</span> <span class="asr-missing">[missing: Boolooroo]</span> gave a yell of disappointment.</p>
+
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/8555-284447-0004.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>As soon as they entered the room of the great knife, the <span class="asr-extra">bularoo</span> <span class="asr-missing">[missing: Boolooroo]</span> gave a yell of disappointment.</p>
+					</td>
+	
+				</tr>
+			</tbody>
+		</table>
+	</div> -->
+	<!-- <br> -->
+
+
+
+	<!-- <h5>Rich jewels of blue stones glittered upon their persons and the royal ladies were fully as gorgeous as they were haughty and overbearing.
+	</h5>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center">Prompt Speaker</th>
+					<th style="text-align: center">Ground Truth</th>
+					<th style="text-align: center">E2-TTS</th>
+					<th style="text-align: center">F5-TTS</th>
+					<th style="text-align: center">F5-TTS<br>vanilla VAE</th>
+					<th style="text-align: center">E2-TTS<br>Semantic VAE</th>
+					<th style="text-align: center">F5-TTS<br>Semantic VAE</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/prompt/8555-284447-0003.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p></p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/gt/8555-284447-0008.flac" autoplay/>Your browser does not support the audio element.</audio>
+							<p>Rich jewels of blue stones glittered upon their persons and the royal ladies were fully as gorgeous as they were haughty and overbearing.
+							</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS/8555-284447-0008.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>rich jewels of blue stones glittered upon their persons and the royal ladies were fully as gorgeous as they were <span class="asr-extra">hefty</span> <span class="asr-missing">[missing: haughty]</span> and overbearing</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS_mel/8555-284447-0008.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>rich jewels of blue stones glittered upon their persons and the royal ladies were fully as gorgeous as they were haughty and overbearing</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+VAE/8555-284447-0008.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>rich jewels of blue stones glittered upon their persons and the royal ladies were fully as gorgeous as they were haughty and overbearing</p>
+					</td>
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/E2TTS+VAE/8555-284447-0008.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>rich jewels of blue stones glittered upon their persons and the royal ladies were fully as gorgeous as they were haughty and overbearing</p>
+					</td>	
+					<td style="vertical-align: top; text-align: center">
+							<audio controls="controls" style="width: 150px;"><source src="audios_n/F5TTS+Semantic_VAE/8555-284447-0008.wav" autoplay/>Your browser does not support the audio element.</audio>
+							<p>rich jewels of blue stones glittered upon their persons and the royal ladies were fully as gorgeous as they were haughty and overbearing</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div> -->
+</div>
+
+<div class="container pt-5 mt-5 shadow-lg p-5 mb-5 bg-white rounded" style="background-color: #f2f2f2;">
+	<h2 id="citation" style="text-align: center;">Citation</h2>
+	<p>If you use this work, please cite:</p>
+	<div class="citation-bibtex-wrap">
+		<button id="copy-citation" class="citation-copy" type="button">Copy</button>
+		<pre class="citation-bibtex"><code id="citation-text">@article{niu2025semantic,
+  title={Semantic-VAE: Semantic-Alignment Latent Representation for Better Speech Synthesis},
+  author={Niu, Zhikang and Hu, Shujie and Choi, Jeongsoo and Chen, Yushen and Chen, Peining and Zhu, Pengcheng and Yang, Yunting and Zhang, Bowen and Zhao, Jian and Wang, Chunhui and others},
+  journal={arXiv preprint arXiv:2509.22167},
+  year={2025}
+}</code></pre>
+	</div>
+</div>
+
+</article>
+</main>
+</div>
+
+<script>
+	(function () {
+		var button = document.getElementById("copy-citation");
+		var code = document.getElementById("citation-text");
+		if (!button || !code) {
+			return;
+		}
+
+		function setCopiedState() {
+			var original = button.textContent;
+			button.textContent = "Copied";
+			setTimeout(function () {
+				button.textContent = original;
+			}, 1500);
+		}
+
+		function fallbackCopy(text) {
+			var textarea = document.createElement("textarea");
+			textarea.value = text;
+			textarea.setAttribute("readonly", "");
+			textarea.style.position = "absolute";
+			textarea.style.left = "-9999px";
+			document.body.appendChild(textarea);
+			textarea.select();
+			document.execCommand("copy");
+			document.body.removeChild(textarea);
+			setCopiedState();
+		}
+
+		button.addEventListener("click", function () {
+			var text = code.textContent.trim();
+			if (navigator.clipboard && window.isSecureContext) {
+				navigator.clipboard.writeText(text).then(setCopiedState).catch(function () {
+					fallbackCopy(text);
+				});
+				return;
+			}
+			fallbackCopy(text);
+		});
+	})();
+</script>
+
+</body>
+</html>
