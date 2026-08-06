@@ -690,12 +690,14 @@ img {
 
 @media (max-width: 760px) {
 	.container {
+		width: calc(100% - 24px);
 		margin: 56px auto 30px;
-		padding: 22px;
+		padding: 18px;
 	}
 
 	.hero {
 		padding: 14px;
+		min-width: 0;
 	}
 
 	.language-switch {
@@ -714,10 +716,14 @@ img {
 	table.imgtable td {
 		display: block;
 		width: 100%;
+		min-width: 0;
+		max-width: 100%;
 	}
 
 	table.imgtable td {
 		padding-right: 0;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	table.imgtable td + td {
@@ -730,6 +736,15 @@ img {
 
 	h1 {
 		font-size: 1.7rem;
+	}
+
+	.contact-note,
+	.contact-meta,
+	.contact-links,
+	.staffshortcut {
+		min-width: 0;
+		max-width: 100%;
+		overflow-wrap: anywhere;
 	}
 }
 
