@@ -453,11 +453,62 @@ a:hover {
 }
 
 .hero {
+	position: relative;
 	margin-bottom: 16px;
 	padding: 18px 20px;
 	border-radius: 16px;
 	background: linear-gradient(135deg, rgba(44, 78, 203, 0.08), rgba(255, 154, 61, 0.08));
 	border: 1px solid rgba(44, 78, 203, 0.12);
+}
+
+.language-switch {
+	position: absolute;
+	top: 18px;
+	right: 20px;
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 6px 11px;
+	border: 1px solid var(--chip-border);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.86);
+	box-shadow: 0 8px 20px rgba(31, 45, 85, 0.1);
+	font-family: "Space Grotesk", "PingFang SC", "Microsoft YaHei", sans-serif;
+	font-size: 0.88rem;
+	font-weight: 600;
+	line-height: 1;
+	z-index: 2;
+}
+
+.language-switch a {
+	color: var(--accent);
+}
+
+.language-switch a:hover {
+	text-decoration: none;
+	color: var(--accent-2);
+}
+
+.language-divider {
+	color: var(--border);
+}
+
+.current-language {
+	color: var(--ink-strong);
+}
+
+.hero h1 {
+	padding-right: 120px;
+}
+
+html[lang="zh-CN"] body {
+	font-family: "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+}
+
+html[lang="zh-CN"] h1,
+html[lang="zh-CN"] h2,
+html[lang="zh-CN"] h3 {
+	font-family: "PingFang SC", "Microsoft YaHei", "Space Grotesk", sans-serif;
 }
 
 table.imgtable {
@@ -645,6 +696,17 @@ img {
 
 	.hero {
 		padding: 14px;
+	}
+
+	.language-switch {
+		position: static;
+		display: flex;
+		width: max-content;
+		margin: 0 0 12px auto;
+	}
+
+	.hero h1 {
+		padding-right: 0;
 	}
 
 	table.imgtable,
