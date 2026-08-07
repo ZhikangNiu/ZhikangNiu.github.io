@@ -660,6 +660,32 @@ img {
 	animation-delay: 0.1s;
 }
 
+.current-topic {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: 10px 0 12px;
+	font-family: "Space Grotesk", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.topic-label {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 9px;
+	border-radius: 999px;
+	background: var(--accent);
+	color: #ffffff;
+	font-size: 0.82rem;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.topic-name {
+	color: var(--ink-strong);
+	font-weight: 600;
+}
+
 .contact-meta {
 	display: flex;
 	flex-wrap: wrap;
@@ -773,6 +799,7 @@ img {
 	}
 
 	.contact-note,
+	.current-topic,
 	.contact-meta,
 	.contact-links,
 	.staffshortcut {
